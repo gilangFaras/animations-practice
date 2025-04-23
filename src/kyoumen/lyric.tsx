@@ -1,46 +1,49 @@
 import {Animated, StyleSheet, Easing} from 'react-native';
 import React, {useEffect} from 'react';
+import Characters from './characters';
 
-const Lyrics = (props: {text: string; index: number}) => {
-  const {text, index} = props;
-  const opacityAnimation = new Animated.Value(0);
+const Lyrics = (props: {
+  text: string;
+  currentLine: number;
+  index: number;
+  onLineFinish: () => void;
+}) => {
+  const {text, currentLine, onLineFinish, index} = props;
   const panY = new Animated.Value(100);
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(opacityAnimation, {
-        useNativeDriver: false,
-        toValue: 1,
-        duration: 500,
-        easing: Easing.ease,
-        delay: 1000 * index,
-      }),
-      Animated.timing(panY, {
-        useNativeDriver: false,
-        toValue: 0,
-        duration: 500,
-        easing: Easing.bezier(0.33,0,0,1.43),
-        delay: 1000 * index,
-      }),
-    ]).start();
-  }, [index]);
+  // useEffect(() => {
+  //   if (currentLine === index) {
+  //     console.log
+  //     Animated.timing(panY, {
+  //       useNativeDriver: false,
+  //       toValue: 0,
+  //       duration: 1500,
+  //       easing: Easing.bezier(0, 0, 0.29, 0.98),
+  //     }).start();
+  //   }
+  // }, [currentLine]);
 
-  return (
-    <Animated.Text
-      style={[
-        styles.lyrics,
-        {opacity: opacityAnimation, transform: [{translateY: panY}]},
-      ]}>
-      {text}
-    </Animated.Text>
-  );
+    return (
+      <Animated.View style={[styles.lines, {transform: [{translateY: panY}]}]}>
+        {currentLine >= index && text.split('').map((char, idx) => {
+          console.log({text});
+          return (
+            <Characters
+              character={char}
+              index={idx}
+              key={`char-${idx}`}
+              textLength={text.length}
+              onLineFinish={onLineFinish}
+            />
+          );
+        })}
+      </Animated.View>
+    );
 };
 
 const styles = StyleSheet.create({
-  lyrics: {
-    fontSize: 18,
-    fontWeight: '500',
-    paddingVertical: 4,
+  lines: {
+    flexDirection: 'row',
   },
 });
 

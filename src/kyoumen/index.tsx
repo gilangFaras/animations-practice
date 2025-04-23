@@ -1,25 +1,30 @@
-import {
-  View,
-  StyleSheet,
-  Animated,
-} from 'react-native';
-import React from 'react';
+import {View, StyleSheet, Animated} from 'react-native';
+import React, {useState} from 'react';
 import Lyrics from './lyric';
 
-const lyrics = ['夕立が名付けられた', '世界を剥がした時', 'それは波のように', '指の隙間をすり抜けて 消えて'];
+const lyrics = ['夕立が名付けられた', '世界を剥がした時', 'それは波のように', '指の隙間をすり抜けて 消えて' ];
 
 const KyoumenPage = () => {
+  const [currentLine, setCurrentLine] = useState(0);
+
+  const onLineFinish = () => {
+    console.log(currentLine)
+    setCurrentLine(currentLine + 1);
+  };
+
   return (
     <View style={styles.container}>
-      {/* <Pressable onPress={startAnimation}>
-        <Text>Start</Text>
-      </Pressable> */}
-
       {/* lyrics  */}
       <Animated.View style={styles.lyricContainer}>
         {lyrics.map((text, index) => {
           return (
-            <Lyrics key={index} text={text} index={index} />
+            <Lyrics
+              key={index}
+              text={text}
+              currentLine={currentLine}
+              index={index}
+              onLineFinish={onLineFinish}
+            />
           );
         })}
       </Animated.View>
