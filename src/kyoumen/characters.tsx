@@ -1,11 +1,35 @@
 import {Text, Animated, StyleSheet, Easing} from 'react-native';
 import React, {useEffect} from 'react';
 
-const Characters = (props: {character: string; index: number; textLength: number, onLineFinish: () => void}) => {
-  const {character, index, textLength, onLineFinish} = props;
+const Characters = (props: {
+  character: string;
+  index: number;
+  textLength: number;
+  currentLine:number;
+}) => {
+  const {character, index, currentLine} = props;
 
   const opacityAnimation = new Animated.Value(0);
   const panX = new Animated.Value(80);
+  const panY = new Animated.Value(100);
+
+  const animationOut = () => {
+    Animated.parallel([
+      Animated.timing(opacityAnimation, {
+        useNativeDriver: false,
+        toValue: 0,
+        duration: 500,
+        easing: Easing.bezier(0, 0, 0.29, 0.98),
+        delay: 200 * index,
+      }),
+      Animated.timing(panY, {
+        useNativeDriver: false,
+        toValue: -80,
+        duration: 2000,
+        easing: Easing.bezier(0, 0, 0.29, 0.98),
+      }),
+    ]).start();
+  };
 
   useEffect(() => {
     Animated.parallel([
@@ -20,21 +44,25 @@ const Characters = (props: {character: string; index: number; textLength: number
         useNativeDriver: false,
         toValue: 0,
         duration: 550,
-        easing: Easing.bezier(0,0,0.22,1),
+        easing: Easing.bezier(0, 0, 0.22, 1),
         delay: 205 * index,
       }),
+      Animated.timing(panY, {
+        useNativeDriver: false,
+        toValue: 0,
+        duration: 1500,
+        easing: Easing.bezier(0, 0, 0.29, 0.98),
+      }),
     ]).start(() => {
-      if(index === textLength - 1){
-        onLineFinish();
-      }
+      setTimeout(animationOut, 2500);
     });
-  }, [index]);
+  }, [currentLine]);
 
   return (
     <Animated.View
       style={[
         styles.lyrics,
-        {opacity: opacityAnimation, transform: [{translateX: panX}]},
+        {opacity: opacityAnimation, transform: [{translateX: panX}, {translateY:panY}]},
       ]}>
       <Text>{character}</Text>
     </Animated.View>
