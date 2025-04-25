@@ -6,10 +6,12 @@
  */
 
 import React from 'react';
-import KyoumenPage from './src/kyoumen';
+// import KyoumenPage from './src/kyoumen';
+import RandomScale from './src/randomScale';
 
 function App(): React.JSX.Element {
-  return <KyoumenPage />;
+  // return <KyoumenPage />;
+  return <RandomScale />;
 }
 
 export default App;
