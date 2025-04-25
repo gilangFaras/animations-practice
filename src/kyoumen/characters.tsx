@@ -38,14 +38,14 @@ const Characters = (props: {
         toValue: 1,
         duration: 600,
         easing: Easing.ease,
-        delay: 200 * index,
+        delay: 200 * index, // Added delay according to it's index so that the characters sequentially animates in
       }),
       Animated.timing(panX, {
         useNativeDriver: false,
         toValue: 0,
         duration: 550,
         easing: Easing.bezier(0, 0, 0.22, 1),
-        delay: 205 * index,
+        delay: 205 * index, // Added delay according to it's index so that the characters sequentially animates in
       }),
       Animated.timing(panY, {
         useNativeDriver: false,
@@ -54,6 +54,8 @@ const Characters = (props: {
         easing: Easing.bezier(0, 0, 0.29, 0.98),
       }),
     ]).start(() => {
+      // After this parallel animations are done, it will run animationOut function in 2.5 seconds
+      // So it waits for the animation to be done first, before running the next set of animation(s)
       setTimeout(animationOut, 2500);
     });
   }, [currentLine]);

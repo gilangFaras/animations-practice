@@ -13,44 +13,41 @@ const KyoumenPage = () => {
   const [currentLine, setCurrentLine] = useState(0);
 
   useEffect(() => {
+    // Add timeout to set new lyric active line
+    // will continue the animation into the next lyric line in 8 seconds
     const timer = setTimeout(() => {
-      if (currentLine < lyrics.length-1) {
+      if (currentLine < lyrics.length - 1) {
         setCurrentLine(currentLine + 1);
       }
     }, 8000);
 
+    // timeout cleanup
     return () => clearTimeout(timer);
   }, [currentLine]);
 
   return (
     <View style={styles.container}>
-      {/* lyrics  */}
-      <Animated.View style={styles.lyricContainer}>
-        <View style={styles.lines}>
-          {lyrics[currentLine].split('').map((char, idx) => {
-            console.log(currentLine, lyrics[currentLine]);
-            return (
-              <Characters
-                character={char}
-                index={idx}
-                key={`char-${idx}`}
-                textLength={lyrics[currentLine].length}
-                currentLine={currentLine}
-              />
-            );
-          })}
-        </View>
-      </Animated.View>
+      <View style={styles.lines}>
+        {/* Breaking down lyrics into characters so it can be animated separately */}
+        {/* Lyrics shown will be according to `currentLine` variables which determines the active lyrics line */}
+        {lyrics[currentLine].split('').map((char, idx) => {
+          return (
+            <Characters
+              character={char}
+              index={idx}
+              key={`char-${idx}`}
+              textLength={lyrics[currentLine].length}
+              currentLine={currentLine} // passing active current line so that the animation will reset every new line
+            />
+          );
+        })}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 20,
-  },
-  lyricContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
