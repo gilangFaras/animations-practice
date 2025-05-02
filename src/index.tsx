@@ -7,10 +7,14 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => navigation.navigate('Tracking')}>
+      <Pressable
+        style={styles.button}
+        onPress={() => navigation.navigate('Tracking')}>
         <Text>Opacity + Tracking</Text>
       </Pressable>
-      <Pressable onPress={() => navigation.navigate('RandomScale')}>
+      <Pressable
+        style={styles.button}
+        onPress={() => navigation.navigate('RandomScale')}>
         <Text>Random Scale</Text>
       </Pressable>
     </View>
@@ -20,8 +24,16 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  button: {
+    backgroundColor: 'cyan',
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginBottom: 8,
+    alignSelf: 'stretch',
   },
 });
 

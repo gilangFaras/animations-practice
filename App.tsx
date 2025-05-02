@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator();
 function RootStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{title: 'Animation Test'}} />
       <Stack.Screen name="Tracking" component={KyoumenPage} />
       <Stack.Screen name="RandomScale" component={RandomScale} />
     </Stack.Navigator>
