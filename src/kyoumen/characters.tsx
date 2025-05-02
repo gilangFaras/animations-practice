@@ -1,19 +1,19 @@
 import {Text, Animated, StyleSheet, Easing} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 const Characters = (props: {
   character: string;
   index: number;
   textLength: number;
-  currentLine:number;
+  currentLine: number;
 }) => {
   const {character, index, currentLine} = props;
 
-  const opacityAnimation = new Animated.Value(0);
-  const panX = new Animated.Value(80);
-  const panY = new Animated.Value(100);
+  const opacityAnimation = useRef(new Animated.Value(0)).current;
+  const panX = useRef(new Animated.Value(80)).current;
+  const panY = useRef(new Animated.Value(100)).current;
 
-  const animationOut = () => {
+  const animationOut = useCallback(() => {
     Animated.parallel([
       Animated.timing(opacityAnimation, {
         useNativeDriver: false,
@@ -28,8 +28,12 @@ const Characters = (props: {
         duration: 2000,
         easing: Easing.bezier(0, 0, 0.29, 0.98),
       }),
-    ]).start();
-  };
+    ]).start(() => {
+      // reset values after animation is done
+      panY.setValue(100);
+      panX.setValue(80);
+    });
+  }, [opacityAnimation, panY, index, panX]);
 
   useEffect(() => {
     Animated.parallel([
@@ -58,13 +62,16 @@ const Characters = (props: {
       // So it waits for the animation to be done first, before running the next set of animation(s)
       setTimeout(animationOut, 2500);
     });
-  }, [currentLine]);
+  }, [currentLine, animationOut, index, opacityAnimation, panX, panY]);
 
   return (
     <Animated.View
       style={[
         styles.lyrics,
-        {opacity: opacityAnimation, transform: [{translateX: panX}, {translateY:panY}]},
+        {
+          opacity: opacityAnimation,
+          transform: [{translateX: panX}, {translateY: panY}],
+        },
       ]}>
       <Text>{character}</Text>
     </Animated.View>
